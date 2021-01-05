@@ -1,20 +1,34 @@
-import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import { TouchableHighlight,KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import logo from '../../assets/treasure-chest.png'
+import {AuthContext} from '../contexts/auth.context'
+import NoteContainer from '../containers/notes.container'
 
-export default function homePage(){
+export default function homePage({navigation}){
+
+	const {logOut} = useContext(AuthContext);
+
+	function handleLogOut(){
+
+		logOut();
+
+	}
+
+	function handleDetail(){
+		
+	}
 
 	return (
 		<KeyboardAvoidingView style={styles.background}>
 			<StatusBar></StatusBar>
-			<View style={styles.containerLogo}>
-				<Image source={logo}></Image>
-			</View>
+			<NoteContainer />
 			<View style={styles.containerFields}>
-
-				<Text style={styles.textAcessar}>Home...</Text>
-
+				<TouchableHighlight onPress={()=>{navigation.navigate('About')}}>
+					<Text>Sobre</Text>
+				</TouchableHighlight>
+				<TouchableHighlight onPress={handleLogOut}>
+					<Text>Log Out</Text>
+				</TouchableHighlight>
 			</View>
 			<StatusBar style="auto" />
 		</KeyboardAvoidingView>

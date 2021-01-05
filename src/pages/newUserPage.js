@@ -2,7 +2,7 @@ import React from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import logo from '../../assets/treasure-chest.png'
-import { Screens } from '../routes';
+//import { Screens } from '../routes';
 
 export default function aboutPage({navigation}){
 
@@ -23,7 +23,7 @@ export default function aboutPage({navigation}){
 				<TouchableHighlight underlayColor='#99ccff' style={styles.buttons} onPress={()=>{}}>
 					<Text style={styles.textButton}>Cadastrar</Text>
 				</TouchableHighlight>
-				<TouchableHighlight underlayColor='#99ccff' style={styles.buttons} onPress={()=>{navigation.navigate(Screens.LOGIN)}}>
+				<TouchableHighlight underlayColor='#99ccff' style={styles.buttons} onPress={()=>{navigation.goBack()}}>
 					<Text style={styles.textButton}>Cancelar</Text>
 				</TouchableHighlight>
 			</View>

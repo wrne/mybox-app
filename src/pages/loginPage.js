@@ -1,11 +1,37 @@
-import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import React, {useState, useContext} from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
+import {AuthContext} from '../contexts/auth.context'
 import { StatusBar } from 'expo-status-bar';
 import logo from '../../assets/treasure-chest.png'
 
-import {Screens} from '../routes'
+// import {Screens} from '../routes/routes'
+import { login } from '../services/loginService';
 
 export default function loginPage({ navigation }) {
+
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const {signed, logIn} = useContext(AuthContext);
+
+
+	function changeEmailAction(value){
+
+		setEmail(value);
+		
+	}
+	
+	function changePasswordAction(value){
+		
+		setPassword(value);
+
+	}
+
+	function submitForm(){
+
+		console.log('Submitting....',email,password);
+		logIn(email,password);
+
+	}
 
 	return (
 		<KeyboardAvoidingView style={styles.background}>
@@ -14,22 +40,22 @@ export default function loginPage({ navigation }) {
 			</View>
 			<View style={styles.containerFields}>
 
-				<TextInput style={styles.input} placeholder="Email" onChangeText={() => { }}></TextInput>
-				<TextInput style={styles.input} placeholder="Senha" onChangeText={() => { }}></TextInput>
+				<TextInput style={styles.input} placeholder="Email" onChangeText={changeEmailAction} id="email" value={email} />
+				<TextInput style={styles.input} placeholder="Senha" onChangeText={changePasswordAction} id="password" value={password} />
 
-				<TouchableOpacity style={styles.btnAcessar}>
+				<TouchableOpacity style={styles.btnAcessar} onPress={submitForm}>
 					<Text style={styles.textAcessar}>Acessar</Text>
 				</TouchableOpacity>
 
 				<View style={styles.links}>
 
-					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate(Screens.NEWUSER) }}>
+					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('NewUser') }}>
 						<Text style={styles.textCadastrar}>Cadastrar</Text>
 					</TouchableOpacity>
-
-					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate(Screens.ABOUT) }}>
+{/* 
+					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('About') }}>
 						<Text style={styles.textCadastrar}>Sobre</Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 				</View>
 
 

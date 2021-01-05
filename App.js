@@ -1,8 +1,15 @@
 import React from 'react';
 import Routes from './src/routes'
+import { AuthProvider } from './src/contexts/auth.context'
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App() {
-  return (
-    <Routes />
-  );
+	
+	return (
+		<AuthProvider>
+			<NavigationContainer>
+				<Routes />
+			</NavigationContainer>
+		</AuthProvider>
+	);
 };
