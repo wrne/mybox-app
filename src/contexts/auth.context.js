@@ -2,8 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LoginService} from '../services/loginService'
 
-export const AuthContext = createContext(
-);
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
@@ -15,10 +14,6 @@ export const AuthProvider = ({ children }) => {
 
 			storagedUser = await AsyncStorage.getItem('@myBoxAuth:user');
 			storagedToken = await AsyncStorage.getItem('@myBoxAuth:token');
-
-			console.log('Carregando context...');
-			// // retirar apos teste...
-			await setTimeout(() => console.log('Carregando context apos 2 segundos...'), 5000)
 
 			if (storagedUser && storagedToken) {
 
@@ -37,8 +32,6 @@ export const AuthProvider = ({ children }) => {
 		const { token, user } = response;
 
 		setUser(response.user);
-
-		console.log('LogIn',response);
 		
 		await AsyncStorage.setItem('@myBoxAuth:user', JSON.stringify(response.user));
 		await AsyncStorage.setItem('@myBoxAuth:token', response.token);
@@ -60,7 +53,6 @@ export const AuthProvider = ({ children }) => {
 
 	};
 
-	console.log('Context');
 	return (
 		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut }}>
 			{children}
