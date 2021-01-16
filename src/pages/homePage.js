@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	containerFields: {
-		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: '90%'
