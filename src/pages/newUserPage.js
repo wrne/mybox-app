@@ -7,17 +7,20 @@ import logo from '../../assets/treasure-chest.png'
 export default function aboutPage({navigation}){
 
 	return (
-		<KeyboardAvoidingView style={styles.background}>
-			<View style={styles.titleContainer}>
+		<View style={styles.background}>
+			
+		<View style={styles.titleContainer}>
 				<Text style={styles.title}>Informe seus dados:</Text>
 			</View>
 			<View style={styles.containerFields}>
+				<KeyboardAvoidingView >
 				<TextInput style={styles.textInput} placeholder="Nome" ></TextInput>
 				<TextInput style={styles.textInput} placeholder="CPF" ></TextInput>
 				<TextInput style={styles.textInput} placeholder="Telefone" ></TextInput>
 				<TextInput style={styles.textInput} placeholder="E-mail" ></TextInput>
 				<TextInput style={styles.textInput} placeholder="Senha" ></TextInput>
 				<TextInput style={styles.textInput} placeholder="Confirme a Senha" ></TextInput>
+		</KeyboardAvoidingView>
 			</View>
 			<View style={styles.containerButtons}>
 				<TouchableHighlight underlayColor='#99ccff' style={styles.buttons} onPress={()=>{}}>
@@ -28,7 +31,7 @@ export default function aboutPage({navigation}){
 				</TouchableHighlight>
 			</View>
 			<StatusBar style="auto" />
-		</KeyboardAvoidingView>
+		</View>
 	)
 };
 

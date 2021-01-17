@@ -28,14 +28,14 @@ export default function homePage({ navigation }) {
 				<View style={styles.container}>
 					<NoteContainer navigation={navigation}/>
 				</View>
-				<View style={styles.containerFields}>
+				{/* <View style={styles.containerFields}>
 					<TouchableHighlight onPress={() => { navigation.navigate('About') }}>
 						<Text>Sobre</Text>
 					</TouchableHighlight>
 					<TouchableHighlight onPress={handleLogOut}>
 						<Text>Log Out</Text>
 					</TouchableHighlight>
-				</View>
+				</View> */}
 				<StatusBar style="auto" />
 			</KeyboardAvoidingView>
 		</NotesProvider>
