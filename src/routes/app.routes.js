@@ -1,20 +1,21 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import AboutPage from '../pages/aboutPage';
-// import HomePage from '../pages/homePage';
-import NoteDetail  from '../components/noteDetail';
-import HomeDrawer from './home.drawer';
+import { NotesProvider } from '../contexts/note.context'
+// import HomeDrawer from './home.drawer';
+import HomeTab from './home.tab';
 
 const AppStack = createStackNavigator();
 
 
 export default function AppRoutes() {
+	
 	return (
-		<AppStack.Navigator screenOptions={styleDefault}>			
-			<AppStack.Screen name='homeDrawer' component={HomeDrawer} options={{ headerShown: false }}/>
-			{/* <AppStack.Screen name='noteDetail' component={NoteDetail} options={{ title: 'Nota' }} />
-			<AppStack.Screen name='About' component={AboutPage} options={{ title: 'Sobre' }} /> */}
-		</AppStack.Navigator>
+		<NotesProvider>
+			<AppStack.Navigator >
+				{/* <AppStack.Screen name='homeDrawer' component={HomeDrawer} options={{ headerShown: false }} /> */}
+				<AppStack.Screen name='homeTab' component={HomeTab} options={{ headerShown: false }} />
+			</AppStack.Navigator>
+		</NotesProvider>
 	);
 };
 

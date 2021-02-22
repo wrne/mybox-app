@@ -1,36 +1,39 @@
 import React from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, View, Text, TextInput } from 'react-native';
-// import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAvoidingView,  StyleSheet, View, Text, TextInput } from 'react-native';
+import { useNotes } from '../contexts/note.context';
 
-export default function NoteDetail({ route, navigation }) {
-	const { content, title, date } = route.params.note;
+export default function NoteDetail({route}) {
+
+	const { note } = route.params;
+	const {content, title, date} = note	
 
 	return (
-		<View>
-			<KeyboardAvoidingView>
+		<View style={styles.container}>
+			{/* <KeyboardAvoidingView> */}
 				<View style={styles.header}>
-
-					<Text style={styles.title}>
+					<TextInput style={styles.title}>
 						{title}
-					</Text>
-					<Text style={styles.date}>
+					</TextInput>
+					<TextInput style={styles.date}>
 						{date}
-					</Text>
+					</TextInput>
 				</View>
 				<View style={styles.content}>
-					{/* <ScrollView> */}
-
 					<TextInput style={styles.textContent} multiline scrollEnabled={true} >
 						{content}
 					</TextInput>
-					{/* </ScrollView> */}
 				</View>
-			</KeyboardAvoidingView>
+			{/* </KeyboardAvoidingView> */}
 		</View>
-	)
+	);
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		width: '100%',
+		
+	},
 	header: {
 		// flexDirection: 'row',
 		justifyContent: 'space-between',

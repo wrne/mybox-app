@@ -1,28 +1,49 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
 import { NoteService } from "../services/notes.service";
+// import {useAuth} from './auth.context'
+
 
 export const NotesContext = createContext();
 
 export const NotesProvider = ({ children }) => {
 
+	const inicialNote = {
+		title: 'Nova Nota',
+		content: 'Seu texto Aqui',
+		date: Date(),
+		id: 0
+	}
 	const [noteList, setNoteList] = useState([]);
+	const [noteDetail, setNoteDetail] = useState(inicialNote);
 
-	useEffect(()=>{
+	function setNoteDefault(){
+		console.log('NoteProvider: SetNoteDefault');
+		setNoteDetail(inicialNote);
+	}
 
-		async function getMyNotes(){
+	useEffect(() => {
+
+		async function getMyNotes() {
 
 			const list = await NoteService.getMyNotes();
-			
-			setNoteList(list);
+
+			if (list && list.length > 0) {
+				setNoteList(list);
+			}
 		}
 
 		getMyNotes();
 
-	},[]);
+	}, []);
 
-	return(
-		<NotesContext.Provider value={{noteList}}>
+	return (
+		<NotesContext.Provider value={{ noteList, noteDetail, setNoteDefault, setNoteDetail }}>
 			{children}
 		</NotesContext.Provider>
 	)
+}
+
+export function useNotes() {
+
+	return useContext(NotesContext);
 }

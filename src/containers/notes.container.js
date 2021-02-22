@@ -1,38 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableHighlight, StyleSheet, View, Text, ActivityIndicator,  FlatList } from 'react-native';
-import { useContext } from 'react/cjs/react.development';
-import { NotesContext } from '../contexts/note.context';
+import { TouchableHighlight, StyleSheet, View, Text, ActivityIndicator, FlatList, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { theme } from '../theme'
+import { useNavigation } from '@react-navigation/native';
 
-export default function NoteContainer({ navigation }) {
+export default function NoteContainer({ noteList, setNoteDetail, setModalVisible }) {
 
-	const { noteList } = useContext(NotesContext);
-	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
+	
+	const { colors, metrics } = theme;
+	const navigation = useNavigation();
 
-		if (noteList && noteList.length && noteList.length > 0) {
 
-			setLoading(false);
-		}
-
-	}, [noteList]);
-
-	function actionDeleteNote(){
+	function actionDeleteNote() {
 		alert('Ação!')
 	}
 
-	function actionShareNote(item){
+	function actionShareNote(item) {
 		alert('Ação2!')
 	}
 
+	function actionLongPress(item) {
+
+		setModalVisible(true)
+
+		setTimeout(() => {
+			setModalVisible(false);
+		}, 3000);
+
+	}
+
+	function handleDetail(note) {
+
+		// setNoteDetail(note);
+		navigation.navigate('noteDetail',{ 
+			screen: 'detail',
+			note:  note
+		})
+
+	}
+	
 	function renderNoteItem({ item }) {
 
-		console.log('RenderNoteItem', item);
 		return (
 			<View style={style.noteItemContainer} >
 				{/* <View style={style.textArea}> */}
-				<TouchableHighlight underlayColor='#f3f3f3' onPress={()=>{handleDetail(item)}} style={style.textArea} >
+				<TouchableHighlight
+					underlayColor={colors.secundaryB}
+					onPress={() => { handleDetail(item) }}
+					onLongPress={() => { actionLongPress(item) }}
+					style={style.textArea} >
 					<View>
 						<Text style={style.noteTitle}>{item.title}</Text>
 						<Text style={style.noteContent}>{item.content}</Text>
@@ -40,44 +57,22 @@ export default function NoteContainer({ navigation }) {
 				</TouchableHighlight>
 				{/* </View> */}
 				<View style={style.buttonsArea}>
-					<TouchableHighlight underlayColor='#f3f3f3' onPress={()=>{actionDeleteNote(item)}} style={style.button}><Icon size={18} name="trash"></Icon></TouchableHighlight>
-					<TouchableHighlight underlayColor='#f3f3f3' onPress={()=>{actionShareNote(item)}} style={style.button}><Icon size={18} name="share-alt"></Icon></TouchableHighlight>
+					<TouchableHighlight underlayColor={colors.mainA} onPress={() => { actionDeleteNote(item) }} style={style.button}><Icon size={18} name="trash" style={{ color: colors.mainB }}></Icon></TouchableHighlight>
+					<TouchableHighlight underlayColor={colors.mainA} onPress={() => { actionShareNote(item) }} style={style.button}><Icon size={18} name="share-alt" style={{ color: colors.mainB }}></Icon></TouchableHighlight>
 				</View>
 			</View>
-
 		)
 	}
 
-	function handleDetail(note) {
 
-		navigation.navigate('noteDetail',{note:note})
-	}
-
-	if (!loading) {
-
-		return (
-
-			<View style={style.container}>
-				<FlatList
-					data={noteList}
-					renderItem={renderNoteItem}
-					keyExtractor={item => item.id}
-				/>
-				{/* {
-					!!noteList && !!noteList.length && !!noteList.length > 0 ? noteList.map((note) => {
-						return renderNoteItem(note)
-					}) : null
-				} */}
-			</View>
-		)
-	} else {
-
-		return (
-			<View style={{ flex: 1, justifyContent: 'center' }}>
-				<ActivityIndicator size="large" color="#666"></ActivityIndicator>
-			</View>
-		)
-	}
+	return (
+		<View style={style.container}>
+			<FlatList
+				data={noteList}
+				renderItem={renderNoteItem}
+				keyExtractor={item => item.id}
+			/>
+		</View>)
 }
 
 const style = StyleSheet.create({
@@ -109,7 +104,7 @@ const style = StyleSheet.create({
 		fontSize: 14,
 		color: 'darkslategray',
 	},
-	button: {		
+	button: {
 		justifyContent: 'space-around',
 		alignItems: 'center',
 		fontStyle: 'normal',

@@ -1,88 +1,116 @@
 import { API_URL } from '../config';
+import {apiService} from './apiService'
 
 
 export const NoteService = {
 
-	getMyNotes() {
+	getMyNotes(token) {
 
-		return  new Promise((resolve) => {
+		return resultApi = new Promise((resolve) => {
 			setTimeout(() => {
 				resolve([
 					{
-						id: 1,
-						title: 'Nota um',
+						id:1,
+						title: 'Nota share um',
+						date: '03/12/2020',
+						content: 'Bla Bla Bla Bla Bla',
+					},
+					{
+						id:2,
+						title: 'Nota share dois',
+						date: '22/12/2020',
 						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '24/11/2020'
 					},
 					{
-						id: 2,
-						title: 'Nota dois',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '02/12/2020'
-					},
-					{
-						id: 3,
-						title: 'Nota três',
+						id:3,
+						title: 'Nota share três',
+						date: '02/01/2021',
 						content: 'Bla Bla Bla Bla Bla Bla Bla',
-						date: '27/12/2020'
 					},
 					{
-						id: 4,
-						title: 'Nota um',
+						id:4,
+						title: 'Nota share um',
+						date: '03/12/2020',
+						content: 'Bla Bla Bla Bla Bla',
+					},
+					{
+						id:5,
+						title: 'Nota share dois',
+						date: '22/12/2020',
 						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '24/11/2020'
 					},
 					{
-						id: 5,
-						title: 'Nota dois',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '02/12/2020'
-					},
-					{
-						id: 6,
-						title: 'Nota três',
+						id:6,
+						title: 'Nota share três',
+						date: '02/01/2021',
 						content: 'Bla Bla Bla Bla Bla Bla Bla',
-						date: '27/12/2020'
 					},
 					{
-						id: 7,
-						title: 'Nota um',
+						id:7,
+						title: 'Nota share um',
+						date: '03/12/2020',
+						content: 'Bla Bla Bla Bla Bla',
+					},
+					{
+						id:8,
+						title: 'Nota share dois',
+						date: '22/12/2020',
 						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '24/11/2020'
 					},
 					{
-						id: 8,
-						title: 'Nota dois',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '02/12/2020'
-					},
-					{
-						id: 9,
-						title: 'Nota três',
+						id:9,
+						title: 'Nota share três',
+						date: '02/01/2021',
 						content: 'Bla Bla Bla Bla Bla Bla Bla',
-						date: '27/12/2020'
 					},
 					{
-						id: 10,
-						title: 'Nota um',
+						id:10,
+						title: 'Nota share três',
+						date: '02/01/2021',
+						content: 'Bla Bla Bla Bla Bla Bla Bla',
+					},
+					{
+						id:11,
+						title: 'Nota share um',
+						date: '03/12/2020',
+						content: 'Bla Bla Bla Bla Bla',
+					},
+					{
+						id:12,
+						title: 'Nota share dois',
+						date: '22/12/2020',
 						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '24/11/2020'
 					},
 					{
-						id: 11,
-						title: 'Nota dois',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-						date: '02/12/2020'
-					},
-					{
-						id: 13,
-						title: 'Nota três',
+						id:13,
+						title: 'Nota share três',
+						date: '02/01/2021',
 						content: 'Bla Bla Bla Bla Bla Bla Bla',
-						date: '27/12/2020'
 					},
 				])
 			}, 1000);
 		})
+
+		// let endpoint = 'notes'
+		
+		// return apiService.request(`${API_URL}/${endpoint}`, 'GET',
+		// 	{
+		// 		'Content-Type': 'application/json',
+		// 		'Authorization': 'Bearer ' + token
+		// 	})
+		// 	.then((responseApi) => {
+
+		// 		if (responseApi.error) {
+		// 			console.log('ERRO_NOTAS', responseApi);
+		// 			return {
+		// 				ok: false,
+		// 				user: {},
+		// 				message: responseApi.error.message
+		// 			}
+		// 		}
+		// 		console.log('GetMyNotes',responseApi);
+		// 		return responseApi;
+		// 	})
 	},
 
 	getShareNotes() {

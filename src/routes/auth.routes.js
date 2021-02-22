@@ -6,10 +6,8 @@ import NewUserPage from '../pages/newUserPage';
 const AuthStack = createStackNavigator();
 
 const Screens = {
-	LOGIN: 'Login',
-	ABOUT: 'About',
-	NEWUSER: 'NewUser',
-	HOME: 'Home'
+	LOGIN: 'login',
+	NEWUSER: 'newUser',
 }
 
 export default function AuthRoutes() {

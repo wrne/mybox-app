@@ -1,45 +1,48 @@
-import React, {useState, useContext} from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
-import {AuthContext} from '../contexts/auth.context'
-import { StatusBar } from 'expo-status-bar';
-import logo from '../../assets/treasure-chest.png'
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, StatusBar,StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
+import { useAuth } from '../contexts/auth.context'
+import logo from '../../assets/my-box-logo-black.png';
+import {useMessages} from '../contexts/message.context';
+import {theme} from '../theme';
 
-// import {Screens} from '../routes/routes'
-import { login } from '../services/loginService';
+const {colors,metrics} = theme;
 
 export default function loginPage({ navigation }) {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const {signed, logIn} = useContext(AuthContext);
+	const { logIn } = useAuth();
+	const {message} = useMessages();
 
-
-	function changeEmailAction(value){
+	function changeEmailAction(value) {
 
 		setEmail(value);
-		
+
 	}
-	
-	function changePasswordAction(value){
-		
+
+	function changePasswordAction(value) {
+
 		setPassword(value);
 
 	}
 
-	function submitForm(){
+	function submitForm() {
 
-		console.log('Submitting....',email,password);
-		logIn(email,password);
+		logIn(email, password);
 
 	}
 
 	return (
 		<KeyboardAvoidingView style={styles.background}>
+		<StatusBar style="auto" />
 			<View style={styles.containerLogo}>
-				<Image source={logo}></Image>
+				<Image source={logo} style={styles.logo} ></Image>
 			</View>
 			<View style={styles.containerFields}>
 
+				<View>
+					<Text>{message ? message : null}</Text>
+				</View>
 				<TextInput style={styles.input} placeholder="Email" onChangeText={changeEmailAction} id="email" value={email} />
 				<TextInput style={styles.input} placeholder="Senha" onChangeText={changePasswordAction} id="password" value={password} />
 
@@ -52,15 +55,10 @@ export default function loginPage({ navigation }) {
 					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('NewUser') }}>
 						<Text style={styles.textCadastrar}>Cadastrar</Text>
 					</TouchableOpacity>
-{/* 
-					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('About') }}>
-						<Text style={styles.textCadastrar}>Sobre</Text>
-					</TouchableOpacity> */}
 				</View>
 
 
 			</View>
-			<StatusBar style="auto" />
 		</KeyboardAvoidingView>
 	)
 };
@@ -68,13 +66,17 @@ export default function loginPage({ navigation }) {
 const styles = StyleSheet.create({
 	background: {
 		flex: 1,
-		backgroundColor: '#f4faff',
+		backgroundColor: '#FFF',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	containerLogo: {
 		flex: 1,
 		justifyContent: 'center'
+	},
+	logo: {
+		width: 350,
+		height: 120
 	},
 	containerFields: {
 		flex: 1,
@@ -94,16 +96,16 @@ const styles = StyleSheet.create({
 		padding: 10
 	},
 	btnAcessar: {
-		backgroundColor: '#35AAFF',
+		backgroundColor: colors.mainB,
 		width: '90%',
 		height: 45,
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderRadius: 7,
-		padding: 10
+		borderRadius: metrics.borderRadius,
+		padding: metrics.padding
 	},
 	textAcessar: {
-		color: '#FFF',
+		color: colors.light,
 		fontSize: 18
 	},
 	btnCadastrar: {
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
 		marginBottom: 30
 	},
 	textCadastrar: {
-		color: '#191919'
+		color: colors.mainB
 	},
 	links: {
 		width: '90%',
