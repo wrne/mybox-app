@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "32256485799",
+    "project_id": "my-box-68bf4",
+    "storage_bucket": "my-box-68bf4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32256485799:android:34cdf169723685d2c1ee82",
+        "android_client_info": {
+          "package_name": "mybox.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "32256485799-ic2klg6bk92o32mcpp0qdaosp0gemvvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIlWhLrDQoR8uZ4DU9KsLoETCHvkkIJvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "32256485799-ic2klg6bk92o32mcpp0qdaosp0gemvvb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
