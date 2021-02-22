@@ -1,0 +1,50 @@
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet,ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
+import { useNotes } from '../contexts/note.context'
+import NoteDetail from '../components/noteDetail'
+
+export default function NewNotePage({navigation}) {
+	const { setNoteDetail, setNoteDefault,noteDetail } = useNotes();
+	const [isLoading, setIsLoading] = useState(true);
+
+	// Carrega nota inicial (vazia) no contexto de Notas
+	useFocusEffect(() => {
+		
+		console.log('PAssou pelo UseEffect do NewNotePage');
+		
+		setNoteDefault();
+		setIsLoading(false);
+		navigation.navigate('noteDetail',{note: noteDetail})
+			
+		
+	});
+
+	// if (isLoading) {
+		return (
+
+			<View style={styles.container}>
+				<ActivityIndicator size="large" color="#666"></ActivityIndicator>
+			</View>
+		);
+	/*} else {
+		console.log('PAssou pela if do NoteDetail');
+		return (
+
+			<View style={styles.container}>
+				<NoteDetail />
+			</View>
+		);
+	}*/
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: '100%',
+		height: '100%',
+	},
+});

@@ -4,7 +4,7 @@ import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack'
 import logoWhite from '../../assets/my-box-logo-white.png'
 
 import { useAuth } from '../contexts/auth.context'
-import MyNotesPage from '../pages/myNotesPage';
+import NewNotePage from '../pages/NewNotePage';
 import NoteDetail from '../components/noteDetail'
 
 import { theme } from '../theme'
@@ -14,9 +14,9 @@ import { useNotes } from '../contexts/note.context';
 
 const { colors, metrics } = theme;
 
-const HomeRoutesStack = createStackNavigator();
+const NewNoteRoutesStack = createStackNavigator();
 
-export default function HomeRoutes({ navigation }) {
+export default function NewNoteRoutes({ navigation }) {
 
 	const { logOut } = useAuth();
 
@@ -26,22 +26,38 @@ export default function HomeRoutes({ navigation }) {
 
 	}
 
+	function goBack(navigation) {
+
+		//TODO: Identificar pq não volta pelo método customizado
+
+		const { inicialNote, setNoteDetail } = useNotes();
+		Alert.alert('Voltando...', 'Voltando do detalhes da nota')
+		console.log('Voltando customizado');
+		setNoteDetail(inicialNote);
+		navigation.goBack();
+
+	}
+
 	return (
-		<HomeRoutesStack.Navigator screenOptions={styleDefault}>
-			<HomeRoutesStack.Screen
-				name="myNotesPage"
-				component={MyNotesPage}
+		<NewNoteRoutesStack.Navigator screenOptions={styleDefault}>
+			<NewNoteRoutesStack.Screen
+				name="NewNotePage"
+				component={NewNotePage}
 				options={{
+					headerLeft: (props) => (
+						<HeaderBackButton {...props} onPress={()=> goBack(navigation)} />
+					),
 					headerRight: () => (
 						<View style={styles.buttonsArea}>
 							<TouchableHighlight onPress={handleLogOut} >
 								<Icon name="sign-out" size={18} style={styles.menuButton} />								
 							</TouchableHighlight>
 						</View>
+
 					),
 				}} />
-			<HomeRoutesStack.Screen name="noteDetail" component={NoteDetail} />
-		</HomeRoutesStack.Navigator>
+			<NewNoteRoutesStack.Screen name="noteDetail" component={NoteDetail} />
+		</NewNoteRoutesStack.Navigator>
 	);
 };
 
