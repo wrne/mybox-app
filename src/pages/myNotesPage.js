@@ -1,19 +1,42 @@
-import React, { useState, useEffect } from 'react'
-import { View, StatusBar, TouchableHighlight, Text, ActivityIndicator, StyleSheet, Modal } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { View, StatusBar, TouchableHighlight, Text, ActivityIndicator, StyleSheet } from 'react-native'
+
+import { Modalize } from 'react-native-modalize';
 
 import NoteContainer from '../containers/notes.container'
 import { useNotes } from '../contexts/note.context'
 
-export default function MyNotesPage(props) {
+import {theme} from '../theme'
+const {colors, metrics} = theme;
+
+export default function MyNotesPage({navigation}) {
 
 
 	// Obtem notas disponíveis do serviço
 	// No serviço, se não retornar nada, define array vazio
 	const { noteList, setNoteDetail, noteDetail } = useNotes();
-	const [modalVisible, setModalVisible] = useState(false);
+	const modalRef = useRef(null);
+
+	// const [modalVisible, setModalVisible] = useState(false);
 
 	// Controle estado da pagina: enquanto está buscando notas, mantem spinner, depois exibe lista ou botão
 	const [loading, setLoading] = useState(true);
+
+	function setModalVisible() {
+
+		modalRef.current?.open();
+
+	}
+
+	function handleDetails() {
+
+		// setNoteDetail(note);
+		navigation.navigate('noteDetail',{ 
+			screen: 'detail',
+			note:  noteDetail
+		})
+
+	}
 
 	useEffect(() => {
 
@@ -36,14 +59,37 @@ export default function MyNotesPage(props) {
 				<View style={styles.container}>
 					<StatusBar style="light"></StatusBar>
 
-					{/* <ListPage {...props} noteList={noteList} setNoteDetail={setNoteDetail} setModalVisible={setModalVisible} ></ListPage> */}
-
 					<NoteContainer
 						noteList={noteList}
 						setNoteDetail={setNoteDetail}
 						setModalVisible={setModalVisible} />
 
-					<Modal
+					<Modalize
+						ref={modalRef}
+						snapPoint={200}
+						modalHeight={200}
+						HeaderComponent={
+							<View style={{width: '100%', padding: 20}}>
+								<Text style={styles.headerModalText}>O que deseja fazer?</Text>
+							</View>
+						}>
+						<View style={styles.modalContent}>							
+
+								<TouchableHighlight onPress={handleDetails} style={[styles.modalButton,{backgroundColor:colors.secundaryB}]} >
+									<Text style={styles.modalButtonText} >Detalhes</Text>
+								</TouchableHighlight>
+
+								<TouchableHighlight onPress={()=>{}} style={[styles.modalButton,{backgroundColor:colors.secundaryA}]}>
+									<Text style={styles.modalButtonText}>Compartilhar</Text>
+								</TouchableHighlight>
+
+								<TouchableHighlight onPress={()=>{}} style={[styles.modalButton,{backgroundColor:colors.mainB}]}>
+									<Text style={styles.modalButtonText}>Excluir</Text>
+								</TouchableHighlight>
+						</View>
+					</Modalize>
+
+					{/* <Modal
 						style={styles.modal}
 						animationType="fade"
 						transparent={true}
@@ -55,7 +101,7 @@ export default function MyNotesPage(props) {
 						<View style={styles.modalContent}>
 							<Text>Texto do Modal</Text>
 						</View>
-					</Modal>
+					</Modal> */}
 				</View>
 			)
 		} else {
@@ -87,27 +133,33 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	headerModalText:{
+		fontSize: 20,
+	},
 	modal: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
-		margin: 100,
 		backgroundColor: "white",
-		borderRadius: 20,
 		padding: 35,
 		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5
+		
 	},
 	modalContent: {
 		flex: 1,
-		backgroundColor: 'gray',
-		height: '100%'
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'center'
+	},
+	modalButton:{
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 80,
+		width: 100,
+		borderRadius: metrics.borderRadius,
+	},
+	modalButtonText:{
+		fontSize: 15,
+		color: 'black'
 	},
 });

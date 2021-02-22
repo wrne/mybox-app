@@ -22,14 +22,12 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 
 	function actionLongPress(item) {
 
+		setNoteDetail(item)
 		setModalVisible(true)
-
-		setTimeout(() => {
-			setModalVisible(false);
-		}, 3000);
 
 	}
 
+	
 	function handleDetail(note) {
 
 		// setNoteDetail(note);
@@ -39,7 +37,6 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 		})
 
 	}
-	
 	function renderNoteItem({ item }) {
 
 		return (
@@ -47,7 +44,7 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 				{/* <View style={style.textArea}> */}
 				<TouchableHighlight
 					underlayColor={colors.secundaryB}
-					onPress={() => { handleDetail(item) }}
+					// onPress={() => { handleDetail(item) }}
 					onLongPress={() => { actionLongPress(item) }}
 					style={style.textArea} >
 					<View>
