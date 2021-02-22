@@ -1,6 +1,8 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LoginService} from '../services/loginService'
+import { LoginService } from '../services/loginService';
+import { useMessages } from './message.context';
 
 export const AuthContext = createContext();
 
@@ -8,6 +10,7 @@ export const AuthProvider = ({ children }) => {
 
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const { setMessage } = useMessages();
 
 	useEffect(() => {
 		async function loadStoragedData() {
@@ -18,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 			if (storagedUser && storagedToken) {
 
 				setUser(JSON.parse(storagedUser));
-				
+
 			}
 		}
 		loadStoragedData();
@@ -27,18 +30,34 @@ export const AuthProvider = ({ children }) => {
 	}, []);
 
 	async function logIn(email, password) {
+		let reponse = {};
 
-		const response = await LoginService.login(email, password);
+		try {
+			if (!email || !password) {
+				throw new Error('Usuário ou senha não informados.')
+			}
+
+			response = await LoginService.login(email, password);
+
+		} catch (error) {
+
+			Alert.alert('Deu ruim na autenticação...', 'Parece que ocorreu algum erro. Veja a mensagem que recebemos:' + error)
+			return
+
+		}
+
 		const { token, user } = response;
 
 		setUser(response.user);
-		
-		await AsyncStorage.setItem('@myBoxAuth:user', JSON.stringify(response.user));
-		await AsyncStorage.setItem('@myBoxAuth:token', response.token);
+		console.log('LOGIN', response);
 
-		
-		if (response.user){
-			console.log('Autenticado! token:',resultLogin);
+		await AsyncStorage.setItem('@myBoxAuth:user', JSON.stringify(response.user));
+		await AsyncStorage.setItem('@myBoxAuth:token', response.user.uid);
+
+
+		if (response.user) {
+			console.log('Autenticado! token:', resultLogin);
+
 		} else {
 			console.log('Deu ruim na autenticação...')
 		}
@@ -53,6 +72,7 @@ export const AuthProvider = ({ children }) => {
 
 	};
 
+
 	return (
 		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut }}>
 			{children}
@@ -60,4 +80,10 @@ export const AuthProvider = ({ children }) => {
 	)
 
 };
+
+export function useAuth() {
+	const context = useContext(AuthContext);
+
+	return context;
+}
 
