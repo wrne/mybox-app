@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, StatusBar, TouchableHighlight, Text, ActivityIndicator, StyleSheet } from 'react-native'
 
 import { Modalize } from 'react-native-modalize';
-
+import FabButton from '../components/fabButton'
 import NoteContainer from '../containers/notes.container'
 import { useNotes } from '../contexts/note.context'
 
-import {theme} from '../theme'
-const {colors, metrics} = theme;
+import { theme } from '../theme'
+const { colors, metrics } = theme;
 
-export default function MyNotesPage({navigation}) {
+export default function MyNotesPage({ navigation }) {
 
 
 	// Obtem notas disponíveis do serviço
@@ -25,17 +25,33 @@ export default function MyNotesPage({navigation}) {
 	function setModalVisible() {
 
 		modalRef.current?.open();
+		
+	}
+	
+	function handleDetail(noteItem) {
+
+		// setNoteDetail(note);
+		navigation.navigate('noteDetail', {
+			screen: 'detail',
+			note: noteItem,
+			operation: 'edit'
+		})
+		
+	}
+
+	function handleDetailModal(){
+		handleDetail(noteDetail);
+	}
+
+	async function handleModalView(noteItem){
+
+		await setNoteDetail(noteItem)
+		setModalVisible()
 
 	}
 
-	function handleDetails() {
-
-		// setNoteDetail(note);
-		navigation.navigate('noteDetail',{ 
-			screen: 'detail',
-			note:  noteDetail
-		})
-
+	function handleNewNote(){
+		navigation.navigate('newNote')
 	}
 
 	useEffect(() => {
@@ -62,30 +78,32 @@ export default function MyNotesPage({navigation}) {
 					<NoteContainer
 						noteList={noteList}
 						setNoteDetail={setNoteDetail}
-						setModalVisible={setModalVisible} />
-
+						setModalVisible={setModalVisible} 
+						actionPressItem={handleDetail}
+						actionLongPressItem={handleModalView}/>
+					<FabButton style={{right:30, bottom: 30}} action={handleNewNote}/>
 					<Modalize
 						ref={modalRef}
 						snapPoint={200}
-						modalHeight={200}
+						modalHeight={800}
 						HeaderComponent={
-							<View style={{width: '100%', padding: 20}}>
+							<View style={{ width: '100%', padding: 20 }}>
 								<Text style={styles.headerModalText}>O que deseja fazer?</Text>
 							</View>
 						}>
-						<View style={styles.modalContent}>							
+						<View style={styles.modalContent}>
 
-								<TouchableHighlight onPress={handleDetails} style={[styles.modalButton,{backgroundColor:colors.secundaryB}]} >
-									<Text style={styles.modalButtonText} >Detalhes</Text>
-								</TouchableHighlight>
+							<TouchableHighlight onPress={handleDetailModal} style={[styles.modalButton, { backgroundColor: colors.secundaryB }]} >
+								<Text style={styles.modalButtonText} >Detalhes</Text>
+							</TouchableHighlight>
 
-								<TouchableHighlight onPress={()=>{}} style={[styles.modalButton,{backgroundColor:colors.secundaryA}]}>
-									<Text style={styles.modalButtonText}>Compartilhar</Text>
-								</TouchableHighlight>
+							<TouchableHighlight onPress={() => { }} style={[styles.modalButton, { backgroundColor: colors.secundaryA }]}>
+								<Text style={styles.modalButtonText}>Compartilhar</Text>
+							</TouchableHighlight>
 
-								<TouchableHighlight onPress={()=>{}} style={[styles.modalButton,{backgroundColor:colors.mainB}]}>
-									<Text style={styles.modalButtonText}>Excluir</Text>
-								</TouchableHighlight>
+							<TouchableHighlight onPress={() => { }} style={[styles.modalButton, { backgroundColor: colors.mainB }]}>
+								<Text style={styles.modalButtonText}>Excluir</Text>
+							</TouchableHighlight>
 						</View>
 					</Modalize>
 
@@ -133,7 +151,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	headerModalText:{
+	headerModalText: {
 		fontSize: 20,
 	},
 	modal: {
@@ -143,7 +161,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		padding: 35,
 		alignItems: "center",
-		
+
 	},
 	modalContent: {
 		flex: 1,
@@ -151,14 +169,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around',
 		alignItems: 'center'
 	},
-	modalButton:{
+	modalButton: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 80,
 		width: 100,
 		borderRadius: metrics.borderRadius,
 	},
-	modalButtonText:{
+	modalButtonText: {
 		fontSize: 15,
 		color: 'black'
 	},

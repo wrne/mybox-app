@@ -6,19 +6,14 @@ import { useNotes } from '../contexts/note.context'
 import NoteDetail from '../components/noteDetail'
 
 export default function NewNotePage({navigation}) {
-	const { setNoteDetail, setNoteDefault,noteDetail } = useNotes();
+	const { setNoteDetail, inicialNote,noteDetail } = useNotes();
 	const [isLoading, setIsLoading] = useState(true);
 
 	// Carrega nota inicial (vazia) no contexto de Notas
 	useFocusEffect(() => {
 		
-		console.log('PAssou pelo UseEffect do NewNotePage');
-		
-		setNoteDefault();
-		setIsLoading(false);
-		navigation.navigate('noteDetail',{note: noteDetail})
-			
-		
+		navigation.navigate('noteDetail',{note: inicialNote, operation: 'insert'})
+
 	});
 
 	// if (isLoading) {

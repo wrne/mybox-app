@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text, ActivityIndicator, FlatList, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { theme } from '../theme'
 import { useNavigation } from '@react-navigation/native';
 
-export default function NoteContainer({ noteList, setNoteDetail, setModalVisible }) {
+export default function NoteContainer({ noteList, setNoteDetail, setModalVisible,actionPressItem,actionLongPressItem }) {
 
 
 	
@@ -20,23 +20,14 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 		alert('Ação2!')
 	}
 
-	function actionLongPress(item) {
+	// async function actionLongPress(item) {
 
-		setNoteDetail(item)
-		setModalVisible(true)
+	// 	await setNoteDetail(item)
+	// 	setModalVisible(true)
 
-	}
+	// }
 
 	
-	function handleDetail(note) {
-
-		// setNoteDetail(note);
-		navigation.navigate('noteDetail',{ 
-			screen: 'detail',
-			note:  note
-		})
-
-	}
 	function renderNoteItem({ item }) {
 
 		return (
@@ -44,8 +35,8 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 				{/* <View style={style.textArea}> */}
 				<TouchableHighlight
 					underlayColor={colors.secundaryB}
-					// onPress={() => { handleDetail(item) }}
-					onLongPress={() => { actionLongPress(item) }}
+					onPress={() => { actionPressItem(item) }}
+					onLongPress={() => { actionLongPressItem(item) }}
 					style={style.textArea} >
 					<View>
 						<Text style={style.noteTitle}>{item.title}</Text>
@@ -53,10 +44,10 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 					</View>
 				</TouchableHighlight>
 				{/* </View> */}
-				<View style={style.buttonsArea}>
+				{/* <View style={style.buttonsArea}>
 					<TouchableHighlight underlayColor={colors.mainA} onPress={() => { actionDeleteNote(item) }} style={style.button}><Icon size={18} name="trash" style={{ color: colors.mainB }}></Icon></TouchableHighlight>
 					<TouchableHighlight underlayColor={colors.mainA} onPress={() => { actionShareNote(item) }} style={style.button}><Icon size={18} name="share-alt" style={{ color: colors.mainB }}></Icon></TouchableHighlight>
-				</View>
+				</View> */}
 			</View>
 		)
 	}

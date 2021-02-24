@@ -5,13 +5,13 @@ import {theme} from '../theme'
 
 const {colors, metrics} = theme;
 
-export default function FabButton({style}){
+export default function FabButton({style, action}){
 
 
 	return(
 
 		<View style={[styles.container, style]} >
-			<TouchableWithoutFeedback>
+			<TouchableWithoutFeedback onPress={action}>
 			<Icon size={24} name="plus" style={{color: colors.secundaryA}} />
 			</TouchableWithoutFeedback>
 		</View>

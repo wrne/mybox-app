@@ -16,9 +16,10 @@ export const NotesProvider = ({ children }) => {
 	const [noteList, setNoteList] = useState([]);
 	const [noteDetail, setNoteDetail] = useState(inicialNote);
 
-	function setNoteDefault(){
-		console.log('NoteProvider: SetNoteDefault');
-		setNoteDetail(inicialNote);
+	async function  setNoteDefault(){
+		
+		await setNoteDetail(inicialNote);
+
 	}
 
 	useEffect(() => {
@@ -37,7 +38,7 @@ export const NotesProvider = ({ children }) => {
 	}, []);
 
 	return (
-		<NotesContext.Provider value={{ noteList, noteDetail, setNoteDefault, setNoteDetail }}>
+		<NotesContext.Provider value={{ noteList, noteDetail,inicialNote, setNoteDefault, setNoteDetail }}>
 			{children}
 		</NotesContext.Provider>
 	)
