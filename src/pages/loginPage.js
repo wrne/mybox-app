@@ -34,7 +34,9 @@ export default function loginPage({ navigation }) {
 
 	return (
 		<KeyboardAvoidingView style={styles.background}>
-		<StatusBar style="auto" />
+			<StatusBar
+				hidden
+			/>
 			<View style={styles.containerLogo}>
 				<Image source={logo} style={styles.logo} ></Image>
 			</View>

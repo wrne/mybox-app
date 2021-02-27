@@ -73,7 +73,10 @@ export default function MyNotesPage({ navigation }) {
 			// Envia lista para "ListPage" via props
 			return (
 				<View style={styles.container}>
-					<StatusBar style="light"></StatusBar>
+					<StatusBar 
+						barStyle="light-content" 
+						backgroundColor={colors.dark}
+					/>
 
 					<NoteContainer
 						noteList={noteList}
