@@ -14,18 +14,6 @@ export default function loginPage({ navigation }) {
 	const { logIn } = useAuth();
 	const { message } = useMessages();
 
-	function changeEmailAction(value) {
-
-		setEmail(value);
-
-	}
-
-	function changePasswordAction(value) {
-
-		setPassword(value);
-
-	}
-
 	function submitForm() {
 
 		logIn(email, password);
@@ -33,20 +21,36 @@ export default function loginPage({ navigation }) {
 	}
 
 	return (
-		<KeyboardAvoidingView style={styles.background}>
+		<View style={styles.background}>
 			<StatusBar
 				hidden
 			/>
 			<View style={styles.containerLogo}>
 				<Image source={logo} style={styles.logo} ></Image>
 			</View>
-			<View style={styles.containerFields}>
+			<KeyboardAvoidingView style={styles.containerFields}>
 
 				<View>
 					<Text>{message ? message : null}</Text>
 				</View>
-				<TextInput style={styles.input} placeholder="Email" onChangeText={changeEmailAction} id="email" value={email} />
-				<TextInput style={styles.input} placeholder="Senha" onChangeText={changePasswordAction} id="password" value={password} />
+				<TextInput style={styles.input}
+					id="email" 
+					placeholder="Email"
+					onChangeText={(t)=> setEmail(t)}
+					value={email}
+					keyboardType="email-address"
+					returnKeyType={"next"}					
+					textContentType={"username"}
+				/>
+				<TextInput style={styles.input}
+					id="password"
+					placeholder="Senha"
+					onChangeText={(t)=> setPassword(t)}
+					value={password}
+					returnKeyType={"send"}
+					secureTextEntry={true}
+					textContentType={"password"}
+				/>
 
 				<TouchableOpacity style={styles.btnAcessar} onPress={submitForm}>
 					<Text style={styles.textAcessar}>Acessar</Text>
@@ -60,8 +64,8 @@ export default function loginPage({ navigation }) {
 				</View>
 
 
-			</View>
-		</KeyboardAvoidingView>
+			</KeyboardAvoidingView>
+		</View>
 	)
 };
 
