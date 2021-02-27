@@ -13,65 +13,34 @@ export const AuthProvider = ({ children }) => {
 	const { setMessage } = useMessages();
 
 	useEffect(() => {
-		async function loadStoragedData() {
 
-			storagedUser = await AsyncStorage.getItem('@myBoxAuth:user');
-			storagedToken = await AsyncStorage.getItem('@myBoxAuth:token');
+		const subscriber = LoginService.validUser(setUser, setLoading)
 
-			if (storagedUser && storagedToken) {
-
-				setUser(JSON.parse(storagedUser));
-
-			}
-		}
-		loadStoragedData();
-		setLoading(false);
+		return subscriber; // unsubscribe on unmount
 
 	}, []);
 
 	async function logIn(email, password) {
-		let reponse = {};
 
 		try {
 			if (!email || !password) {
-				throw new Error('Usuário ou senha não informados.')
+				throw 'Usuário ou senha não informados.'
 			}
-
-			response = await LoginService.login(email, password);
+			await LoginService.login(email, password);
 
 		} catch (error) {
-
-			Alert.alert('Deu ruim na autenticação...', 'Parece que ocorreu algum erro. Veja a mensagem que recebemos:' + error)
+			// Tratar erros com base nos códigos
+			Alert.alert('Ops...', '' + error)
 			return
 
 		}
-
-		const { token, user } = response;
-
-		setUser(response.user);
-		console.log('LOGIN', response);
-
-		await AsyncStorage.setItem('@myBoxAuth:user', JSON.stringify(response.user));
-		await AsyncStorage.setItem('@myBoxAuth:token', response.user.uid);
-
-
-		if (response.user) {
-			console.log('Autenticado! token:', resultLogin);
-
-		} else {
-			console.log('Deu ruim na autenticação...')
-		}
 	};
 
-	function logOut() {
+	async function logOut() {
 
-		AsyncStorage.clear()
-			.then(() => {
-				setUser(null);
-			})
+		await LoginService.logout();
 
 	};
-
 
 	return (
 		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut }}>

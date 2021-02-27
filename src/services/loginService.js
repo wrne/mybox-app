@@ -2,59 +2,64 @@ import { API_URL } from '../config.js'
 import { apiService } from './apiService'
 import auth from '@react-native-firebase/auth';
 
-
 export const LoginService = {
 
 	// login(email, password, msgContext, dispatch, history) {
-	async login(email, password) {
-
+	login: async (email, password) => {
 
 		try {
-			
-			const user = await auth().signInWithEmailAndPassword(email, password);
-			console.log('LOGIN_SERVICE',user);
-			return user;
-			
-		} catch (error) {
-			throw new Error('Falha no login.\n'+error)
+
+			await auth().signInWithEmailAndPassword(email, password);
+
+		} catch ({code}) {
+
+			if (code === 'auth/user-not-found') {
+				throw 'Usuário não encontrado!'
+			}
+
+			if (code === 'auth/invalid-email') {
+				throw 'O endereço de email é inválido!'
+			}
+
+			if (code === 'auth/wrong-password') {
+				throw 'Senha incorreta!'
+			}
 		}
-		// return new Promise((resolve) => {
+	},
 
-		// 	setTimeout(() => {
-		// 		resolve(
-		// 			{
-		// 				token: '1l23h4b1l2h341lj2v3412349gasdfgasigr4',
-		// 				user: {
-		// 					name: 'Wanderley Neto',
-		// 					email: 'wneto_ramos@hotmail.com'
-		// 				}
-		// 			}
-		// 		)
-		// 	}, 1000);
+	logout: async () => {
 
-		// })
+		try {
+			await auth().signOut()
 
-		/*
-				return apiService.request(`${API_URL}/sessions`, 'POST', { 'Content-Type': 'application/json', }, login)
-					.then(responseApi => {
-		
-						// Verificando erro
-						if (responseApi.error) {
-		
-							// msgContext.setMsg('Falha no login do usuário');
-							console.log('Erro autenticação:',responseApi);
-							return false;
-		
-						}
-		
-						// return { token: responseApi.token };
-						// dispatch( NotesThunkActions.setNewToken(responseApi.token) );
-						// msgContext.setMsg('Usuário logado com sucesso!');
-						
-						return true;
-		
-					})
-					.catch(() => { return false });
-		*/
+		} catch (error) {
+			throw new Error('Falha no logout.\n')
+		}
+	},
+
+
+	validUser: async (setUser, setLoading, ) => {
+
+		function onAuthStateChanged(user) {
+			console.log('AuthStateChanged...');
+			setUser(user);
+			setLoading(false);
+		}
+
+		auth().onAuthStateChanged(onAuthStateChanged);
+		console.log('Função para validar usuário');
+	},
+
+	updateUser: (dataUpdate) => {
+		const user = auth.currentUser;
+
+		user.updateProfile(dataUpdate)
+			.then(() => {
+				alert('Usuário atualizado!');
+			})
+			.catch(() => {
+				alert('Falha ao atualizat o usuário...')
+			})
 	}
+
 }
