@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, StatusBar,StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
+import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
 import { useAuth } from '../contexts/auth.context'
 import logo from '../../assets/my-box-logo-black.png';
-import {useMessages} from '../contexts/message.context';
-import {theme} from '../theme';
+import { useMessages } from '../contexts/message.context';
+import { theme } from '../theme';
 
-const {colors,metrics} = theme;
+const { colors, metrics } = theme;
 
 export default function loginPage({ navigation }) {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { logIn } = useAuth();
-	const {message} = useMessages();
+	const { message } = useMessages();
 
 	function changeEmailAction(value) {
 
