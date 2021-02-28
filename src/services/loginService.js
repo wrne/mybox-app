@@ -41,7 +41,7 @@ export const LoginService = {
 	validUser: async (setUser, setLoading, ) => {
 
 		function onAuthStateChanged(user) {
-			console.log('AuthStateChanged...');
+			console.log('AuthStateChanged...',user);
 			setUser(user);
 			setLoading(false);
 		}

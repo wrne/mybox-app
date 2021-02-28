@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 
 import HomeRoutes from './home.routes'
-import NoteDetail from '../components/noteDetail'
+import ConfigPage from '../pages/configPage'
 import NewNotePage from '../pages/newNotePage'
 
 import {theme} from '../theme'
@@ -59,7 +59,7 @@ export default function HomeTab() {
 			<HomeTabBotton.Screen name="ShareWithMe" component={HomeRoutes} />			
 			<HomeTabBotton.Screen name="newNote" component={NewNotePage} />
 			<HomeTabBotton.Screen name="search" component={HomeRoutes} />
-			<HomeTabBotton.Screen name="config" component={NoteDetail} />
+			<HomeTabBotton.Screen name="config" component={ConfigPage} />
 		</HomeTabBotton.Navigator>
 
 	);
