@@ -18,7 +18,18 @@ const HomeRoutesStack = createStackNavigator();
 
 export default function HomeRoutes({ navigation }) {
 
-	const { logOut } = useAuth();
+	const { logOut, user } = useAuth();
+	
+	const styleDefault = {
+		title: user.displayName && <Text style={styles.logoText}>Box do {user.displayName}</Text> || <Image source={logoWhite} style={styles.logo} />,
+		headerStyle: { backgroundColor: colors.dark },
+		headerTintColor: colors.light,
+		headerTitleStyle: {
+			// alignItems: 'center',		
+			height: 52,
+		}
+	}
+
 
 	function handleLogOut() {
 
@@ -35,7 +46,7 @@ export default function HomeRoutes({ navigation }) {
 					headerRight: () => (
 						<View style={styles.buttonsArea}>
 							<TouchableHighlight onPress={handleLogOut} >
-								<Icon name="sign-out" size={18} style={styles.menuButton} />								
+								<Icon name="sign-out" size={18} style={styles.menuButton} />
 							</TouchableHighlight>
 						</View>
 					),
@@ -51,11 +62,13 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 35,
 	},
+	logoText: {
+		fontFamily: 'Lastica',
+		fontSize: 20,
+	},
 	buttonsArea: {
 		flexDirection: 'row',
 		justifyContent: 'space-between'
-
-
 	},
 	menuButton: {
 		color: colors.light,
@@ -65,33 +78,3 @@ const styles = StyleSheet.create({
 	}
 
 })
-const styleDefault = {
-	title: <Image source={logoWhite} style={styles.logo} />,
-	headerStyle: { backgroundColor: colors.dark },
-	headerTintColor: colors.light,
-	headerTitleStyle: {
-		// alignItems: 'center',		
-		height: 52,
-	}
-}
-
-
-function customHeader({ scene, previous, navigation }) {
-	const { options } = scene.descriptor;
-	const title =
-		options.headerTitle !== undefined
-			? options.headerTitle
-			: options.title !== undefined
-				? options.title
-				: scene.route.name;
-
-	return (
-		<Header
-			title={title}
-			leftButton={
-				previous ? <MyBackButton onPress={navigation.goBack} /> : undefined
-			}
-			style={options.headerStyle}
-		/>
-	);
-};
