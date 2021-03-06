@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
 		const subscriber = LoginService.validUser(setUser, setLoading)
 
-		return subscriber; // unsubscribe on unmount
+		// return subscriber; // unsubscribe on unmount
 
 	}, []);
 
@@ -42,8 +42,45 @@ export const AuthProvider = ({ children }) => {
 
 	};
 
+	async function createUser(newUser) {
+		
+		try {
+
+			await LoginService.createUser(newUser);
+
+		} catch (error) {
+
+			// Tratar erros com base nos códigos
+			Alert.alert('Ops...', '' + error)
+		
+		}
+	}
+	
+	async function updateUser({email, password, name, phone, personalId}) {
+
+		let user = {};
+
+		// Define propriedade alteradas do usuário
+		if (name) user.name = name;
+		if (password) user.password = password;
+		if (email) user.email = email;
+		if (phone) user.phone = phone;
+		if (personalId) user.personalId = personalId;
+
+		try {
+
+			await LoginService.updateUser(user);
+
+		} catch (error) {
+
+			// Tratar erros com base nos códigos
+			Alert.alert('Ops...', '' + error)
+			return
+		}
+	}
+
 	return (
-		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut }}>
+		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut,createUser, updateUser }}>
 			{children}
 		</AuthContext.Provider>
 	)

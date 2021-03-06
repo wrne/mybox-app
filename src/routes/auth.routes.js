@@ -3,24 +3,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginPage from '../pages/loginPage';
 import NewUserPage from '../pages/newUserPage';
 
-const AuthStack = createStackNavigator();
+import {theme} from '../theme'
+const {colors} = theme;
 
-const Screens = {
-	LOGIN: 'login',
-	NEWUSER: 'newUser',
-}
+const AuthStack = createStackNavigator();
 
 export default function AuthRoutes() {
 	return (
 		<AuthStack.Navigator screenOptions={styleDefault}>
-			<AuthStack.Screen name={Screens.LOGIN} component={LoginPage} options={{ headerShown: false }} />
-			<AuthStack.Screen name={Screens.NEWUSER} component={NewUserPage} options={{ title: 'Novo Usuário' }} />
+			<AuthStack.Screen name='login' component={LoginPage} options={{ headerShown: false }} />
+			<AuthStack.Screen name='newuser' component={NewUserPage} options={{ title: 'Novo Usuário' }} />
 		</AuthStack.Navigator>
 	);
 };
 
 const styleDefault = {
-	headerStyle: { backgroundColor: '#4da8f2' },
+	headerStyle: { backgroundColor: colors.secundaryB },
 	headerTintColor: '#FFF',
 	headerTitleStyle: {
 		// fontWeight: ''

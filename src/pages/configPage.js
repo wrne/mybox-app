@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/auth.context';
 import { theme } from '../theme';
 
 const { colors, metrics } = theme;
-export default function configPage() {
+export default function configPage({navigation}) {
 
 	const { user, logOut } = useAuth();
 
@@ -27,10 +27,10 @@ export default function configPage() {
 				</View>
 			</View>
 			<View style={styles.options}>
-				<TouchableHighlight underlayColor={colors.gray} style={styles.listOption} onPress={() => { alert('opcao Conta') }}>
+				<TouchableHighlight underlayColor={colors.gray} style={styles.listOption} onPress={() => { navigation.navigate('account') }}>
 					<Text style={styles.editOptionText}>Conta</Text>
 				</TouchableHighlight>
-				<TouchableHighlight underlayColor={colors.gray} onPress={() => { alert('opcao Sobre') }} style={styles.listOption}>
+				<TouchableHighlight underlayColor={colors.gray} onPress={() => { navigation.navigate('about') }} style={styles.listOption}>
 					<Text style={styles.editOptionText}>Sobre</Text>
 				</TouchableHighlight>
 				<TouchableHighlight underlayColor={colors.gray} onPress={logOut} style={styles.listOption}>

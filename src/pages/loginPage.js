@@ -58,7 +58,7 @@ export default function loginPage({ navigation }) {
 
 				<View style={styles.links}>
 
-					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('NewUser') }}>
+					<TouchableOpacity style={styles.btnCadastrar} onPressIn={() => { navigation.navigate('newuser') }}>
 						<Text style={styles.textCadastrar}>Cadastrar</Text>
 					</TouchableOpacity>
 				</View>
