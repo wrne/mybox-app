@@ -1,89 +1,82 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, StatusBar, TouchableHighlight, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Modalize } from 'react-native-modalize';
-import FabButton from '../components/fabButton'
 import NoteContainer from '../containers/notes.container'
 import { useNotes } from '../contexts/note.context'
 
 import { theme } from '../theme'
 const { colors, metrics } = theme;
 
-export default function MyNotesPage({ navigation }) {
+export default function NotesSharedWithMePage({ navigation }) {
 
 
 	// Obtem notas disponíveis do serviço
 	// No serviço, se não retornar nada, define array vazio
-	const { noteList,loading, noteDetail, editNote, deleteNote, shareNewNote } = useNotes();
+	const { noteSharedWithMe, getNotesSharedWithMe, loadingSharedNotes } = useNotes();
 	const modalRef = useRef(null);
-	const [noteDetailToModal, setNoteDetailToModal ] = useState({});
-	const [shareToMailToModal, setShareToMailToModal ] = useState('');
+	const [noteDetailToModal, setNoteDetailToModal] = useState({});
+
+	useEffect(()=>{
+
+		//Obtem lista de notas compartilhadas com o usuário
+		getNotesSharedWithMe();
+
+	},[]);
 
 	function setModalVisible() {
 
 		modalRef.current?.open();
-		
+
 	}
-	
+
 	function handleDetail(noteItem) {
 
 		// setNoteDetail(note);
 		navigation.navigate('noteDetail', {
 			screen: 'detail',
 			note: noteItem,
-			operation: 'edit',
-			editAction: editNote,
-			delAction: deleteNote,
-			shareAction: shareNewNote
+			operation: 'shared',
 		})
-		
+
 	}
 
-	function handleDetailModal(){
+	function handleDetailModal() {
 		handleDetail(noteDetailToModal);
 	}
 
-	function handleShareNoteByModal(){
-		shareNewNote(noteDetailToModal, shareToMailToModal)
-	}
 
-	function handleOpenShareNoteModal(){
+	function handleOpenShareNoteModal() {
 		// TODO:
 		// Abrir novo campo no modal para informar o email do usuário com quem a nota será compartilhada.
 		// Após informado, dispara função abaixo para a função do context compartilhar a nota
 	}
 
-	async function handleModalView(noteItem){
+	async function handleModalView(noteItem) {
 
 		setNoteDetailToModal(noteItem);
 		setModalVisible();
 
 	}
 
-	function handleNewNote(){
-		navigation.navigate('newNote')
-	}
+	if (!loadingSharedNotes) {
 
-	if (!loading) {
-
-		if (noteList && noteList.length > 0) {
+		if (noteSharedWithMe && noteSharedWithMe.length > 0) {
 
 			// Envia lista para "ListPage" via props
 			return (
 				<View style={styles.container}>
-					<StatusBar 
-						barStyle="light-content" 
+					<StatusBar
+						barStyle="light-content"
 						backgroundColor={colors.dark}
 					/>
-					
+
 					<NoteContainer
-						noteList={noteList}
-						setModalVisible={setModalVisible} 
+						noteList={noteSharedWithMe}
+						setModalVisible={setModalVisible}
 						actionPressItem={handleDetail}
 						actionLongPressItem={handleModalView} />
 
-					<FabButton style={{right:30, bottom: 30}} action={handleNewNote}/>
 
 					<Modalize
 						ref={modalRef}
@@ -99,13 +92,6 @@ export default function MyNotesPage({ navigation }) {
 								<Text style={styles.modalButtonText} >Detalhes</Text>
 							</TouchableHighlight>
 
-							<TouchableHighlight onPress={handleOpenShareNoteModal} style={[styles.modalButton, { backgroundColor: colors.secundaryA }]}>
-								<Text style={styles.modalButtonText}>Compartilhar</Text>
-							</TouchableHighlight>
-
-							<TouchableHighlight onPress={() => { }} style={[styles.modalButton, { backgroundColor: colors.mainB }]}>
-								<Text style={styles.modalButtonText}>Excluir</Text>
-							</TouchableHighlight>
 						</View>
 					</Modalize>
 
@@ -116,9 +102,7 @@ export default function MyNotesPage({ navigation }) {
 			// Se lista estiver vazia renderiza botão para adicionar nova nota
 			return (
 				<View style={styles.container}>
-					<TouchableOpacity onPress={handleNewNote}>
-						<Text>Toque aqui para criar sua primeira nota!</Text>
-					</TouchableOpacity>
+					<Text>Nenhuma nota aqui...</Text>
 				</View>
 			)
 		}

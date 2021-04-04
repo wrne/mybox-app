@@ -82,10 +82,10 @@ const styles = StyleSheet.create({
 	},
 	logo: {
 		width: 350,
-		height: 120
+		height: '15%'
 	},
 	containerFields: {
-		flex: 1,
+		// flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: '90%'

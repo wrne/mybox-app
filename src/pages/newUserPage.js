@@ -21,7 +21,8 @@ export default function aboutPage({ navigation }) {
 
 		if (password === confirmPassword) {
 
-			createUser({ email, password, name, personalId, phone });
+			createUser({ name, personalId, phone, email, password });
+			navigation.navigate('login')
 			
 		} else {
 

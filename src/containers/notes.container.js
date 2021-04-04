@@ -4,7 +4,7 @@ import { TouchableHighlight, StyleSheet, View, Text, ActivityIndicator, FlatList
 import { theme } from '../theme'
 import { useNavigation } from '@react-navigation/native';
 
-export default function NoteContainer({ noteList, setNoteDetail, setModalVisible,actionPressItem,actionLongPressItem }) {
+export default function NoteContainer({ noteList, setModalVisible,actionPressItem,actionLongPressItem }) {
 
 
 	
@@ -13,11 +13,11 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 
 
 	function actionDeleteNote() {
-		alert('Ação!')
+		alert('Atenção!')
 	}
 
 	function actionShareNote(item) {
-		alert('Ação2!')
+		alert('Atenção2!')
 	}
 
 	// async function actionLongPress(item) {
@@ -34,7 +34,7 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 			<View style={style.noteItemContainer} >
 				{/* <View style={style.textArea}> */}
 				<TouchableHighlight
-					underlayColor={colors.secundaryB}
+					underlayColor={'#FFI'}
 					onPress={() => { actionPressItem(item) }}
 					onLongPress={() => { actionLongPressItem(item) }}
 					style={style.textArea} >
@@ -65,7 +65,8 @@ export default function NoteContainer({ noteList, setNoteDetail, setModalVisible
 
 const style = StyleSheet.create({
 	container: {
-		width: '100%'
+		width: '100%',
+		flex:1,
 	},
 	noteItemContainer: {
 		width: '100%',
@@ -73,8 +74,10 @@ const style = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		backgroundColor: '#FFF',
+		marginTop: 5,
 		padding: 10,
 		borderBottomWidth: 0.5,
+		elevation: 5,
 	},
 	textArea: {
 		flex: 1

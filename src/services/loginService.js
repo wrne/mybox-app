@@ -1,6 +1,52 @@
 import { API_URL } from '../config.js'
 import { apiService } from './apiService'
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
+export async function getValidUserById(uid) {
+
+	const infoUser = await firestore()
+		.collection('Users')
+		.doc(uid)
+		.get()
+
+	let validUser = infoUser.data();
+
+	if (!!validUser) {
+
+		// Trata dados disponibilizados do usuários
+		delete validUser.password
+		validUser.id = uid
+
+	}
+	return validUser
+};
+
+export async function getValidUserByMail(email) {
+
+	let validUser = {};
+
+	const querySnapshot = await firestore()
+		.collection('Users')
+		.where('email', '==', email)
+		.get()
+
+	querySnapshot.forEach(infoUser => {
+
+		validUser = infoUser.data();
+
+		if (!!validUser) {
+
+			// Trata dados disponibilizados do usuários
+			delete validUser.password
+			validUser.id = infoUser.id
+
+		}
+
+	})
+
+	return validUser
+};
 
 export const LoginService = {
 
@@ -40,25 +86,47 @@ export const LoginService = {
 
 	validUser: async (setUser, setLoading,) => {
 
-		function onAuthStateChanged(user) {
-			console.log('AuthStateChanged...', user);
-			setUser(user);
+		async function onAuthStateChanged(user) {
+
+			if (!user) {
+
+				setUser(null);
+
+			} else {
+
+				const validUser = await getValidUserById(user.uid)
+
+				setUser(validUser);
+			}
+
 			setLoading(false);
 		}
 
 		auth().onAuthStateChanged(onAuthStateChanged);
-		console.log('Função para validar usuário');
 	},
 
-	async createUser({ email, password, name, phone, personalId }) {
 
-		console.info(`Name: ${name}`);
-		console.info(`Email: ${email}`);
-		console.info(`Password: ${password}`);
+	async createUser(newUser) {
 
 		try {
-			
-			await auth().createUserWithEmailAndPassword(email, password);
+
+			// Cria login
+			auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
+				.then(({ user }) => {
+					
+					// Cria usuário
+					firestore()
+						.collection('Users')
+						.doc(user.uid)
+						.set(newUser)
+						.then(()=>{
+							console.log('User added!',result);
+						})
+						.catch((e) => {
+							throw e
+						})
+
+				})
 
 		} catch (error) {
 
@@ -78,30 +146,30 @@ export const LoginService = {
 				throw 'Senha não é forte o bastante.'
 			}
 
+			console.log('ERROR_CREATE_USER' + error);
 			throw 'Falha ao criar novo usuário.\nTente novamente mais tarde';
 
 		}
 
 	},
 
-	async updateUser({email, password, name, phone, personalId}) {
-		
+	async updateUser({ email, password, name, phone, personalId }) {
+
 		const user = auth().currentUser;
-		console.log('UPDUSER_SERVICE',user);
 
 		let dataUpdateProfile = {};
 
 		if (name) dataUpdateProfile.displayName = name;
 		if (phone) dataUpdateProfile.phoneNumber = phone;
-		
+
 		try {
 
 			await user.updateProfile(dataUpdateProfile)
 			// await user.updatePhoneNumber(dataUpdateProfile)
-// 
+			// 
 		} catch (error) {
 
-			console.log('UPDUSER_SERVICE_ERROR',error);
+			console.log('UPDUSER_SERVICE_ERROR', error);
 			throw 'Falha ao atualizar o usuário.\nTente novamente mais tarde.'
 
 		}

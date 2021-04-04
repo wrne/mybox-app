@@ -1,140 +1,159 @@
 import { API_URL } from '../config';
-import {apiService} from './apiService'
+import { apiService } from './apiService'
+import firestore from '@react-native-firebase/firestore';
+import { Share } from 'react-native';
+
 
 
 export const NoteService = {
 
-	getMyNotes(token) {
+	async getMyNotes(user) {
 
-		return resultApi = new Promise((resolve) => {
-			setTimeout(() => {
-				resolve([
-					{
-						id:1,
-						title: 'Nota share um',
-						date: '03/12/2020',
-						content: 'Bla Bla Bla Bla Bla',
-					},
-					{
-						id:2,
-						title: 'Nota share dois',
-						date: '22/12/2020',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:3,
-						title: 'Nota share três',
-						date: '02/01/2021',
-						content: 'Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:4,
-						title: 'Nota share um',
-						date: '03/12/2020',
-						content: 'Bla Bla Bla Bla Bla',
-					},
-					{
-						id:5,
-						title: 'Nota share dois',
-						date: '22/12/2020',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:6,
-						title: 'Nota share três',
-						date: '02/01/2021',
-						content: 'Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:7,
-						title: 'Nota share um',
-						date: '03/12/2020',
-						content: 'Bla Bla Bla Bla Bla',
-					},
-					{
-						id:8,
-						title: 'Nota share dois',
-						date: '22/12/2020',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:9,
-						title: 'Nota share três',
-						date: '02/01/2021',
-						content: 'Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:10,
-						title: 'Nota share três',
-						date: '02/01/2021',
-						content: 'Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:11,
-						title: 'Nota share um',
-						date: '03/12/2020',
-						content: 'Bla Bla Bla Bla Bla',
-					},
-					{
-						id:12,
-						title: 'Nota share dois',
-						date: '22/12/2020',
-						content: 'Bla Bla Bla Bla Bla Bla Bla Bla Bla',
-					},
-					{
-						id:13,
-						title: 'Nota share três',
-						date: '02/01/2021',
-						content: 'Bla Bla Bla Bla Bla Bla Bla',
-					},
-				])
-			}, 1000);
-		})
+		let myNotes = [];
 
-		// let endpoint = 'notes'
-		
-		// return apiService.request(`${API_URL}/${endpoint}`, 'GET',
-		// 	{
-		// 		'Content-Type': 'application/json',
-		// 		'Authorization': 'Bearer ' + token
-		// 	})
-		// 	.then((responseApi) => {
+		try {
 
-		// 		if (responseApi.error) {
-		// 			console.log('ERRO_NOTAS', responseApi);
-		// 			return {
-		// 				ok: false,
-		// 				user: {},
-		// 				message: responseApi.error.message
-		// 			}
-		// 		}
-		// 		console.log('GetMyNotes',responseApi);
-		// 		return responseApi;
-		// 	})
+			// Consulta notas do usuário logado
+			const querySnapshot = await firestore()
+				.collection('Notes')
+				// Filter results
+				.where('user', '==', user.id)
+				.get()
+
+			// Controe array com notas obtidas
+			querySnapshot.forEach(docSnapShot => {
+
+				const doc = docSnapShot.data()
+
+				const newNote = {
+					id: doc.id,
+					title: doc.title,
+					date: doc.date,
+					content: doc.content
+				};
+
+				myNotes.push(newNote);
+			})
+
+			return myNotes;
+			// });
+		}
+		catch (e) {
+			throw 'Erro ao obter notas. Tente novamente mais tarde'
+		}
 	},
 
-	getShareNotes() {
+	activeListenerMyNotes(user, setNoteList, setLoading) {
 
-		
-		return resultApi = new Promise((resolve) => {
-			setTimeout(() => {
-				resolve([
-					{
-						title: 'Nota share um',
-						content: 'Bla Bla Bla',
-					},
-					{
-						title: 'Nota share dois',
-						content: 'Bla Bla Bla',
-					},
-					{
-						title: 'Nota share três',
-						content: 'Bla Bla Bla',
-					}
-				])
-			}, 1000);
-		})
-	}
+		let myNotes = [];
+
+		const subscriber = firestore()
+			.collection('Notes')
+			.where('user', '==', user.id)
+			.onSnapshot(querySnapshot => {
+
+				myNotes = [];
+
+				querySnapshot.forEach(docSnapShot => {
+
+					const doc = docSnapShot.data()
+
+					const note = {
+						id: docSnapShot.id,
+						title: doc.title,
+						date: doc.date,
+						content: doc.content,
+						date: doc.date
+					};
+
+					myNotes.push(note);
+				});
+				setNoteList(myNotes);
+				setLoading(false);
+
+			});
+
+		return subscriber;
+
+	},
+
+	async new(newNote) {
+
+		firestore()
+			.collection('Notes')
+			.add(newNote)
+			.then(() => {
+				console.log('Note added!');
+			});
+
+	},
+
+	async edit(note) {
+
+		firestore()
+			.collection('Notes')
+			.doc(note.id)
+			.update(note)
+			.then(() => {
+				console.log('Note updated!');
+			});
+	},
+
+	async delete(idNote) {
+
+		firestore()
+			.collection('Notes')
+			.doc(idNote)
+			.delete()
+			.then(() => {
+				console.log('Note deleted!');
+			});
+
+	},
+
+	async share(shareNote) {
+
+		firestore()
+			.collection(('SharedNotes'))
+			.add(shareNote)
+			.then(() => {
+				console.log('Note shared!');
+			});
+
+	},
+
+	async getNotesSharedWithMe(user) {
+
+		let mySharedNotes = [];
+
+		try {
+
+			// Consulta notas do usuário logado
+			const querySnapshot = await firestore()
+				.collection('SharedNotes')
+				// Filter results
+				.where('sharedWith.id', '==', user.id)
+				.get()
+
+			// Controe array com notas obtidas
+			querySnapshot.forEach(docSnapShot => {
+				const doc = docSnapShot.data()
+				
+
+				const newNote = {
+					...doc.note,
+					// TODO: Adicionar info sobre usuário que compartilhou
+				};
+
+				mySharedNotes.push(newNote);
+			})
+
+			return mySharedNotes;
+		}
+		catch (SharedNotes) {
+			throw 'Erro ao obter notas. Tente novamente mais tarde'
+		}
+	},
 
 
 }

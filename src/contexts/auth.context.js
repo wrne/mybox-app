@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { LoginService } from '../services/loginService';
+import { LoginService, getValidUserById, getValidUserByMail } from '../services/loginService';
 import { useMessages } from './message.context';
 
 export const AuthContext = createContext();
@@ -36,6 +36,19 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
+	async function getInfoUser({uid, email}){
+
+		let validUser = {};
+		if (!!uid){
+
+			validUser = await getValidUserById(uid)
+		} else {
+			validUser = await getValidUserByMail(email)
+		}
+		
+		return validUser
+	};
+
 	async function logOut() {
 
 		await LoginService.logout();
@@ -56,13 +69,12 @@ export const AuthProvider = ({ children }) => {
 		}
 	}
 	
-	async function updateUser({email, password, name, phone, personalId}) {
+	async function updateUser({email, name, phone, personalId}) {
 
 		let user = {};
 
 		// Define propriedade alteradas do usuário
 		if (name) user.name = name;
-		if (password) user.password = password;
 		if (email) user.email = email;
 		if (phone) user.phone = phone;
 		if (personalId) user.personalId = personalId;
@@ -80,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 	}
 
 	return (
-		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut,createUser, updateUser }}>
+		<AuthContext.Provider value={{ signed: !!user, user, loading, logIn, logOut,createUser, updateUser, getInfoUser }}>
 			{children}
 		</AuthContext.Provider>
 	)
