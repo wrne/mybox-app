@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert } from 'react-native';
-import { useAuth } from '../contexts/auth.context'
+import React from 'react';
+import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import { useAuth } from '../contexts/auth.context';
 import logo from '../../assets/my-box-logo-black.png';
 import { useMessages } from '../contexts/message.context';
 import { theme } from '../theme';
@@ -9,12 +13,23 @@ const { colors, metrics } = theme;
 
 export default function loginPage({ navigation }) {
 
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	// Schema de validação dos campos do formulário
+	const validationSchema = yup.object().shape({
+		email: yup
+			.string()
+			.required('Preencha o email')
+			.email('Digite um email válido'),
+		password: yup
+			.string()
+			.required('Preencha a senha')
+			.min(6, 'A senha deve ter pelo menos 6 dígitos')
+	})
+
+	const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
 	const { logIn } = useAuth();
 	const { message } = useMessages();
 
-	function submitForm() {
+	function submitForm({ email, password }) {
 
 		logIn(email, password);
 
@@ -30,29 +45,48 @@ export default function loginPage({ navigation }) {
 			</View>
 			<KeyboardAvoidingView style={styles.containerFields}>
 
-				<View>
-					<Text>{message ? message : null}</Text>
-				</View>
-				<TextInput style={styles.input}
-					id="email" 
-					placeholder="Email"
-					onChangeText={(t)=> setEmail(t)}
-					value={email}
-					keyboardType="email-address"
-					returnKeyType={"next"}					
-					textContentType={"username"}
-				/>
-				<TextInput style={styles.input}
-					id="password"
-					placeholder="Senha"
-					onChangeText={(t)=> setPassword(t)}
-					value={password}
-					returnKeyType={"send"}
-					secureTextEntry={true}
-					textContentType={"password"}
-				/>
+				<View style={styles.containerInputText}>
 
-				<TouchableOpacity style={styles.btnAcessar} onPress={submitForm}>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<TextInput style={[styles.input, !!errors?.email ? { borderColor: colors.mainA, borderWidth: 2 } : null]}
+								id="email"
+								placeholder="Digite o Email"
+								onChangeText={(t) => onChange(t)}
+								value={value}
+								keyboardType="email-address"
+								returnKeyType={"next"}
+								textContentType={"username"}
+							/>
+						)}
+						name="email"
+						defaultValue=""
+					/>
+					{!!errors?.email && <Text style={styles.msgError}>*{errors.email.message}</Text>}
+				</View>
+				<View style={styles.containerInputText}>
+
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<TextInput style={[styles.input, !!errors?.email ? { borderColor: colors.mainA, borderWidth: 2 } : null]}
+								id="password"
+								placeholder="Digite a Senha"
+								onChangeText={(t) => onChange(t)}
+								value={value}
+								returnKeyType={"send"}
+								secureTextEntry={true}
+								textContentType={"password"}
+							/>
+						)}
+						name="password"
+						defaultValue=""
+					/>
+					{!!errors.password && <Text style={styles.msgError}>*{errors.password.message}</Text>}
+
+				</View>
+				<TouchableOpacity style={styles.btnAcessar} onPress={handleSubmit(submitForm)}>
 					<Text style={styles.textAcessar}>Acessar</Text>
 				</TouchableOpacity>
 
@@ -62,7 +96,6 @@ export default function loginPage({ navigation }) {
 						<Text style={styles.textCadastrar}>Cadastrar</Text>
 					</TouchableOpacity>
 				</View>
-
 
 			</KeyboardAvoidingView>
 		</View>
@@ -78,37 +111,51 @@ const styles = StyleSheet.create({
 	},
 	containerLogo: {
 		flex: 1,
-		justifyContent: 'center'
+		height: '40%',
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	logo: {
-		width: 350,
-		height: '15%'
+		width: '100%',
+		resizeMode: 'contain'
 	},
 	containerFields: {
-		// flex: 1,
+		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: '90%'
 	},
+	containerInputText: {
+		height: '23%',
+		width: '100%',
+		padding: 5,
+		alignItems: 'flex-end',
+	},
 	input: {
 		backgroundColor: '#FFF',
-		width: '90%',
-		marginBottom: 15,
+		width: '100%',
 		color: '#222',
 		fontSize: 20,
 		borderWidth: 1,
 		borderColor: "lightgray",
-		borderRadius: 7,
+		borderRadius: metrics.borderRadius,
 		padding: 10
+	},
+	msgError: {
+		paddingTop: 5,
+		paddingRight: 5,
+		color: 'red',
 	},
 	btnAcessar: {
 		backgroundColor: colors.mainB,
-		width: '90%',
+		width: '96%',
 		height: 45,
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: metrics.borderRadius,
-		padding: metrics.padding
+		margin: 5,
+		marginTop: 10,
 	},
 	textAcessar: {
 		color: colors.light,
